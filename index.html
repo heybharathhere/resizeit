@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Resize Engine — Image Resizer</title>
+<meta name="description" content="Resize images by dimensions or target file size, right in your browser." />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="grid3d" aria-hidden="true"></div>
+
+  <div class="shell">
+    <header class="header">
+      <div class="eyebrow"><span class="dot"></span> IMAGE.PROCESSOR // v2</div>
+      <h1 class="h1">RESIZE ENGINE</h1>
+      <p class="sub">Upload a source image. Set target dimensions or file size. Render output. Everything happens locally in your browser — nothing is uploaded anywhere.</p>
+    </header>
+
+    <div class="rz-grid">
+      <!-- LEFT: Upload / Preview -->
+      <div class="panel">
+        <div class="panel-label">01 · SOURCE</div>
+
+        <div id="dropzone" class="dropzone">
+          <input id="fileInput" type="file" accept="image/*" class="hidden-input" />
+
+          <div id="dropInner" class="drop-inner">
+            <div class="drop-icon">⬡</div>
+            <div class="drop-title">Drag &amp; drop image</div>
+            <div class="drop-hint">PNG · JPG · WebP</div>
+            <button type="button" id="browseBtn" class="browse-btn">BROWSE FILES</button>
+          </div>
+
+          <div id="previewWrap" class="preview-wrap hidden">
+            <img id="previewImg" class="preview-img" alt="preview" />
+            <button type="button" id="replaceBtn" class="replace-btn">REPLACE</button>
+          </div>
+        </div>
+
+        <div id="metaRow" class="meta-row hidden">
+          <span class="meta-label">ORIGINAL</span>
+          <span id="metaOrig" class="meta-mono"></span>
+        </div>
+
+        <div id="errorBox" class="error-box hidden"></div>
+      </div>
+
+      <!-- RIGHT: Controls -->
+      <div class="panel">
+        <div class="panel-label">02 · TARGET</div>
+
+        <div class="mode-toggle">
+          <button type="button" id="modePxBtn" class="mode-btn mode-btn-active">DIMENSIONS</button>
+          <button type="button" id="modeKbBtn" class="mode-btn">FILE SIZE</button>
+        </div>
+
+        <!-- Dimensions mode -->
+        <div id="pxControls" class="control-block">
+          <div class="field-row">
+            <label class="field-label">WIDTH</label>
+            <input type="number" id="widthInput" class="num-input" disabled />
+            <span class="unit">PX</span>
+          </div>
+          <input type="range" id="widthSlider" class="slider" min="16" max="2048" disabled />
+
+          <div class="field-row" style="margin-top:18px">
+            <label class="field-label">HEIGHT</label>
+            <input type="number" id="heightInput" class="num-input" disabled />
+            <span class="unit">PX</span>
+          </div>
+          <input type="range" id="heightSlider" class="slider" min="16" max="2048" disabled />
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="lockAspect" checked />
+            <span>Lock aspect ratio</span>
+          </label>
+
+          <div class="preset-row" id="pxPresets">
+            <button type="button" class="preset-btn" data-preset="256" disabled>256</button>
+            <button type="button" class="preset-btn" data-preset="512" disabled>512</button>
+            <button type="button" class="preset-btn" data-preset="1024" disabled>1024</button>
+            <button type="button" class="preset-btn" data-preset="2048" disabled>2048</button>
+          </div>
+
+          <div class="field-row" style="margin-top:22px">
+            <label class="field-label">QUALITY</label>
+            <span class="unit" id="qualityVal">92%</span>
+          </div>
+          <input type="range" id="qualitySlider" class="slider" min="0.1" max="1" step="0.01" value="0.92" disabled />
+        </div>
+
+        <!-- File size mode -->
+        <div id="kbControls" class="control-block hidden">
+          <div class="field-row">
+            <label class="field-label">TARGET</label>
+            <input type="number" id="kbInput" class="num-input" value="200" disabled />
+            <span class="unit">KB</span>
+          </div>
+          <input type="range" id="kbSlider" class="slider" min="10" max="5000" value="200" disabled />
+
+          <div class="preset-row" id="kbPresets">
+            <button type="button" class="preset-btn" data-preset="50" disabled>50</button>
+            <button type="button" class="preset-btn" data-preset="100" disabled>100</button>
+            <button type="button" class="preset-btn" data-preset="200" disabled>200</button>
+            <button type="button" class="preset-btn" data-preset="500" disabled>500</button>
+            <button type="button" class="preset-btn" data-preset="1000" disabled>1000</button>
+          </div>
+
+          <p class="hint-text" id="kbHint">Compression is auto-tuned to land close to your target. Switch to Dimensions to change output size.</p>
+        </div>
+
+        <div class="field-row">
+          <label class="field-label">FORMAT</label>
+          <div class="format-row" id="formatRow">
+            <button type="button" class="format-btn format-btn-active" data-format="image/jpeg">JPG</button>
+            <button type="button" class="format-btn" data-format="image/png">PNG</button>
+            <button type="button" class="format-btn" data-format="image/webp">WEBP</button>
+          </div>
+        </div>
+
+        <button type="button" id="generateBtn" class="generate-btn" disabled>GENERATE IMAGE</button>
+
+        <div id="resultBox" class="result-box hidden">
+          <div class="meta-row">
+            <span class="meta-label">OUTPUT</span>
+            <span id="metaOutput" class="meta-mono"></span>
+          </div>
+          <a id="downloadBtn" class="download-btn" href="#">⬇ DOWNLOAD</a>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">Runs entirely client-side — your images never leave your device.</footer>
+  </div>
+
+  <canvas id="workCanvas" class="hidden"></canvas>
+
+  <script src="assets/script.js"></script>
+</body>
+</html>
